@@ -1,9 +1,12 @@
 import requests
 
 
-class API:
-    def __init__(self, client_id, app_secret, sandbox=False):
-        self.PAYPAL_URL = "https://api-m.sandbox.paypal.com"
+class PayPal:
+    def __init__(self, client_id, app_secret, sandbox=True):
+        if sandbox:
+            self.PAYPAL_URL = "https://api-m.sandbox.paypal.com"
+        else:
+            self.PAYPAL_URL = "https://api-m.paypal.com"
         APP_CLIENT_ID = client_id
         APP_SECRET = app_secret
 
@@ -18,7 +21,7 @@ class API:
         oauth_body_json = oauth_response.json()
         self.access_token = oauth_body_json["access_token"]
 
-    def catelog_products(self):
+    def catalogs(self):
         headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer {}".format(self.access_token),
