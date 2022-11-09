@@ -37,7 +37,7 @@ class PayPal:
         )
 
     def create_order(self, reference_id, value):
-        schema = Schema([{"reference_id": str, "value": int}])
+        schema = Schema({"reference_id": str, "value": int})
         data = {"reference_id": reference_id, "value": value}
         if schema.is_valid(data):
             headers = {
