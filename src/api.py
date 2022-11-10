@@ -4,7 +4,9 @@ from .exceptions import ValidationError, AuthorizationError, FailedRequest
 
 
 class PayPal:
-    def __init__(self, client_id, app_secret, sandbox=False, website="https://example.com"):
+    def __init__(
+        self, client_id, app_secret, sandbox=False, website="https://example.com"
+    ):
         self.client_id = client_id
         self.secret = app_secret
 
@@ -35,7 +37,12 @@ class PayPal:
     def get_access_token(self):
         url = self.url("/oauth2/token")
         auth = (self.client_id, self.secret)
-        result = requests.post(url, "grant_type=client_credentials", auth=auth)
+        result = requests.post(
+            url,
+            data={"grant_type": "client_credentials"},
+            auth=auth,
+            headers={"Accept": "application/json", "Accept-Language": "en_US"},
+        )
         if result.status_code == 200:
             return result.json()["access_token"]
         else:
@@ -103,13 +110,14 @@ class PayPal:
         response = self.api.post(url, json={"plan_id": plan_id})
         return self.handle_response(response)
 
-    def create_order(self, value, reference_id):
+    def create_order(self, reference_id, value, name):
+        print(reference_id)
         url = self.resources["orders"]
         json = {
-            "intent": "CAPTURE",
+            "intent": name,
             "purchase_units": [
                 {
-                    "reference_id": reference_id,
+                    "reference_id": str(reference_id),
                     "amount": {"currency_code": "USD", "value": value},
                 }
             ],
