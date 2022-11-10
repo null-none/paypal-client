@@ -4,9 +4,9 @@ from .exceptions import ValidationError, AuthorizationError, FailedRequest
 
 
 class PayPal:
-    def __init__(self, client_id, secret, sandbox=False, website="https://example.com"):
+    def __init__(self, client_id, app_secret, sandbox=False, website="https://example.com"):
         self.client_id = client_id
-        self.secret = secret
+        self.secret = app_secret
 
         self.api_url = "https://api-m.paypal.com"
         if sandbox:
