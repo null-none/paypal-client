@@ -19,7 +19,8 @@ Example
     APP_CLIENT_ID = 'APP_CLIENT_ID'
     APP_SECRET = 'APP_SECRET'
     paypal = PayPal(APP_CLIENT_ID, APP_SECRET)
-    paypal.catalogs()
+    paypal.list_products()
+    paypal.list_plans()
 
 =======
 Donation
