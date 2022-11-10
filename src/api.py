@@ -3,7 +3,7 @@ import requests
 from .exceptions import ValidationError, AuthorizationError, FailedRequest
 
 
-class PyPayPal:
+class PayPal:
     def __init__(self, client_id, secret, sandbox=False, website="https://example.com"):
         self.client_id = client_id
         self.secret = secret
