@@ -131,8 +131,8 @@ class PayPal:
                         "landing_page": "LOGIN",
                         "shipping_preference": "SET_PROVIDED_ADDRESS",
                         "user_action": "PAY_NOW",
-                        "return_url": f"{self.website}/return",
-                        "cancel_url": f"{self.website}/cancel",
+                        "return_url": "{self.website}/return",
+                        "cancel_url": "{self.website}/cancel",
                     }
                 }
             },
