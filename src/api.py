@@ -5,7 +5,7 @@ from .exceptions import ValidationError, AuthorizationError, FailedRequest
 
 class PayPal:
     def __init__(
-        self, client_id, app_secret, sandbox=False, website="https://example.com"
+        self, client_id, app_secret, sandbox=True, website="https://example.com"
     ):
         self.client_id = client_id
         self.secret = app_secret
@@ -111,10 +111,9 @@ class PayPal:
         return self.handle_response(response)
 
     def create_order(self, reference_id, value, name):
-        print(reference_id)
         url = self.resources["orders"]
         json = {
-            "intent": name,
+            "intent": "CAPTURE",
             "purchase_units": [
                 {
                     "reference_id": str(reference_id),
@@ -131,11 +130,13 @@ class PayPal:
                         "landing_page": "LOGIN",
                         "shipping_preference": "SET_PROVIDED_ADDRESS",
                         "user_action": "PAY_NOW",
-                        "return_url": "{self.website}/return",
-                        "cancel_url": "{self.website}/cancel",
+                        "return_url": f"{self.website}/return",
+                        "cancel_url": f"{self.website}/cancel",
                     }
                 }
             },
         }
-        response = self.api.post(url, json=json)
+        response = self.api.post(
+            url, json=json, headers={"PayPal-Request-Id": str(reference_id)}
+        )
         return self.handle_response(response)
