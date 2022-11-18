@@ -63,6 +63,7 @@ class PayPal:
             if status_code == 400:
                 raise ValidationError(message, payload)
             raise FailedRequest(message, status_code, payload)
+        return data
 
     def list_products(self):
         url = self.resources["products"]
@@ -119,24 +120,7 @@ class PayPal:
                     "reference_id": str(reference_id),
                     "amount": {"currency_code": "USD", "value": value},
                 }
-            ],
-            "payment_source": {
-                "paypal": {
-                    "experience_context": {
-                        "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
-                        "payment_method_selected": "PAYPAL",
-                        "brand_name": "BRAND INC",
-                        "locale": "en-US",
-                        "landing_page": "LOGIN",
-                        "shipping_preference": "SET_PROVIDED_ADDRESS",
-                        "user_action": "PAY_NOW",
-                        "return_url": f"{self.website}/return",
-                        "cancel_url": f"{self.website}/cancel",
-                    }
-                }
-            },
+            ]
         }
-        response = self.api.post(
-            url, json=json, headers={"PayPal-Request-Id": str(reference_id)}
-        )
+        response = self.api.post(url, json=json)
         return self.handle_response(response)
