@@ -21,6 +21,7 @@ Example
     paypal = PayPal(APP_CLIENT_ID, APP_SECRET)
     paypal.list_products()
     paypal.list_plans()
+    paypal.create_order(UUID, 20)
 
 =======
 Donation
