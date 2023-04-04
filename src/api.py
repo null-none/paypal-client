@@ -23,7 +23,7 @@ class PayPal:
 
         self.resources = {
             "products": self.url("/catalogs/products"),
-            "plans": self.url("/billing/plans"),
+            "subscriptions": self.url("/billing/subscriptions"),
             "plans": self.url("/billing/plans"),
             "orders": self.url("/checkout/orders", 2),
         }
@@ -121,6 +121,32 @@ class PayPal:
                     "amount": {"currency_code": "USD", "value": value},
                 }
             ]
+        }
+        response = self.api.post(url, json=json)
+        return self.handle_response(response)
+
+    def create_plan(self, name,  product_id, frequency, sequence, tenure_type="REGULAR", payment_preferences={}):
+        url = self.resources["plans"]
+        json = {
+            "billing_cycles": {
+                "frequency": frequency,
+                "sequence": sequence,
+                "tenure_type": tenure_type
+            },
+            "name": name,
+            "product_id": product_id,
+            "payment_preferences": payment_preferences
+        }
+        response = self.api.post(url, json=json)
+        return self.handle_response(response)
+
+    def create_product(self, name, type="DIGITAL", category="SOFTWARE", description=""):
+        url = self.resources["plans"]
+        json = {
+            "name": name,
+            "type": type,
+            "category": category,
+            "description": description
         }
         response = self.api.post(url, json=json)
         return self.handle_response(response)
