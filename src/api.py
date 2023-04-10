@@ -17,7 +17,7 @@ class PayPal:
         access_token = self.get_access_token()
 
         api = requests.Session()
-        api.headers.update({"Authorization": f"Bearer {access_token}"})
+        api.headers.update({"Authorization": "Bearer {}".format(access_token)})
         self.api = api
         self.website = website
 
