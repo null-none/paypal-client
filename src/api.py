@@ -109,6 +109,7 @@ class PayPal:
     def create_subscription(self, plan_id):
         url = self.resources["subscriptions"]
         response = self.api.post(url, json={"plan_id": plan_id})
+        print(response.__dict__)
         return self.handle_response(response)
 
     def create_order(self, reference_id, value, name):
@@ -120,33 +121,49 @@ class PayPal:
                     "reference_id": str(reference_id),
                     "amount": {"currency_code": "USD", "value": value},
                 }
-            ]
+            ],
         }
         response = self.api.post(url, json=json)
         return self.handle_response(response)
 
-    def create_plan(self, name,  product_id, frequency, sequence, tenure_type="REGULAR", payment_preferences={}):
+    def create_plan(self, product_id, name, description, frequency, price):
         url = self.resources["plans"]
         json = {
-            "billing_cycles": {
-                "frequency": frequency,
-                "sequence": sequence,
-                "tenure_type": tenure_type
-            },
-            "name": name,
             "product_id": product_id,
-            "payment_preferences": payment_preferences
+            "name": name,
+            "description": description,
+            "status": "ACTIVE",
+            "billing_cycles": [
+                {
+                    "frequency": {"interval_unit": "MONTH", "interval_count": 1},
+                    "tenure_type": "REGULAR",
+                    "sequence": 1,
+                    "total_cycles": 12,
+                    "pricing_scheme": {
+                        "fixed_price": {"value": price, "currency_code": "USD"}
+                    },
+                },
+            ],
+            "payment_preferences": {
+                "auto_bill_outstanding": True,
+                "setup_fee": {"value": price, "currency_code": "USD"},
+                "setup_fee_failure_action": "CONTINUE",
+                "payment_failure_threshold": 3,
+            },
+            "taxes": {"percentage": "10", "inclusive": False},
         }
         response = self.api.post(url, json=json)
         return self.handle_response(response)
 
-    def create_product(self, name, type="DIGITAL", category="SOFTWARE", description=""):
-        url = self.resources["plans"]
+    def create_product(
+        self, name, type="DIGITAL", category="SOFTWARE", description
+    ):
+        url = self.resources["products"]
         json = {
             "name": name,
             "type": type,
             "category": category,
-            "description": description
+            "description": description,
         }
         response = self.api.post(url, json=json)
         return self.handle_response(response)
