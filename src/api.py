@@ -30,9 +30,9 @@ class PayPal:
 
     def url(self, path, version=1):
         if version == 2:
-            return self.api_url + "/v2" + path
+            return "{}/v2{}".format(self.api_url, path)
         else:
-            return self.api_url + "/v1" + path
+            return "{}/v1{}".format(self.api_url, path)
 
     def get_access_token(self):
         url = self.url("/oauth2/token")
@@ -77,17 +77,17 @@ class PayPal:
         return self.handle_response(response)
 
     def show_plan_details(self, id):
-        url = self.resources["plans"] + f"/{id}"
+        url = "{}/{}".format(self.resources["plans"], id)
         response = self.api.get(url)
         return self.handle_response(response)
 
     def show_subscription_details(self, id):
-        url = self.resources["subscriptions"] + f"/{id}"
+        url = "{}/{}".format(self.resources["subscriptions"], id)
         response = self.api.get(url)
         return self.handle_response(response)
 
     def list_transactions_for_subscription(self, id):
-        url = self.resources["subscriptions"] + f"/{id}/transactions"
+        url = "{}/{}/transactions".format(self.resources["subscriptions"], id)
         response = self.api.get(url)
         return self.handle_response(response)
 
@@ -97,22 +97,21 @@ class PayPal:
         return self.handle_response(response)
 
     def cancel_subscription(self, id, reason):
-        url = self.resources["subscriptions"] + f"/{id}/cancel"
+        url = "{}/{}/cancel".format(self.resources["subscriptions"], id)
         response = self.api.post(url, json={"reason": reason})
         return self.handle_response(response)
 
     def activate_subscription(self, id, reason):
-        url = self.resources["subscriptions"] + f"/{id}/activate"
+        url = "{}/{}/activate".format(self.resources["subscriptions"], id)
         response = self.api.post(url, json={"reason": reason})
         return self.handle_response(response)
 
     def create_subscription(self, plan_id):
         url = self.resources["subscriptions"]
         response = self.api.post(url, json={"plan_id": plan_id})
-        print(response.__dict__)
         return self.handle_response(response)
 
-    def create_order(self, reference_id, value, name):
+    def create_order(self, reference_id, value):
         url = self.resources["orders"]
         json = {
             "intent": "CAPTURE",
@@ -122,6 +121,9 @@ class PayPal:
                     "amount": {"currency_code": "USD", "value": value},
                 }
             ],
+             "user_action": "PAY_NOW",
+             "return_url": "https://example.com/returnUrl",
+             "cancel_url": "https://example.com/cancelUrl"
         }
         response = self.api.post(url, json=json)
         return self.handle_response(response)
