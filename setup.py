@@ -1,9 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="paypal_client",
     version="0.2.1",
-    packages=find_packages(),
     keywords="python, pay pal, rest api, paypal",
     description="The PayPal API provides simple client for RESTful APIs",
     long_description="Simple client for PayPal RESTful APIs",
