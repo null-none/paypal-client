@@ -2,10 +2,11 @@ from setuptools import setup
 
 setup(
     name="paypal_client",
-    version="0.2.1",
+    version="0.3.0",
     keywords="python, pay pal, rest api, paypal",
     description="The PayPal API provides simple client for RESTful APIs",
     long_description="Simple client for PayPal RESTful APIs",
+    long_description_content_type="text/x-rst",
     author="Dmitry Kalinin",
     url="https://github.com/null-none/paypal-client",
     license="MIT",
