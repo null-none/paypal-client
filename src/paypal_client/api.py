@@ -121,9 +121,9 @@ class PayPal:
                     "amount": {"currency_code": "USD", "value": value},
                 }
             ],
-             "user_action": "PAY_NOW",
-             "return_url": "https://example.com/returnUrl",
-             "cancel_url": "https://example.com/cancelUrl"
+            "user_action": "PAY_NOW",
+            "return_url": "https://example.com/returnUrl",
+            "cancel_url": "https://example.com/cancelUrl",
         }
         response = self.api.post(url, json=json)
         return self.handle_response(response)
@@ -157,9 +157,7 @@ class PayPal:
         response = self.api.post(url, json=json)
         return self.handle_response(response)
 
-    def create_product(
-        self, name, type="DIGITAL", category="SOFTWARE", description
-    ):
+    def create_product(self, name, type="DIGITAL", category="SOFTWARE", description=""):
         url = self.resources["products"]
         json = {
             "name": name,

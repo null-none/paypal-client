@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+
+[project]
+name = "paypal-client"
+version = "0.0.1"
+description = "PayPal API provides simple client for RESTful APIs"
+readme = "README.md"
+authors = [{ name = "Kalinin Mitko", email = "kalinin.mitko@gmail.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["django", "hotnet", "ajax"]
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+dev = ["pip-tools"]
+
+[project.urls]
+Homepage = "https://github.com/null-none/paypal-client"
+
+[tools.setuptools]
+packages = ["src"]
