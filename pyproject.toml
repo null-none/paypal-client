@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 
 [project]
 name = "paypal-client"
-version = "0.0.1"
+version = "0.1.1"
 description = "PayPal API provides simple client for RESTful APIs"
 readme = "README.md"
 authors = [{ name = "Kalinin Mitko", email = "kalinin.mitko@gmail.com" }]
@@ -13,7 +13,7 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
 ]
-keywords = ["django", "hotnet", "ajax"]
+keywords = ["python", "paypal", "api", "rest api]
 requires-python = ">=3.9"
 
 [project.optional-dependencies]
