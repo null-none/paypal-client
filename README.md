@@ -10,15 +10,12 @@ pip install paypal-client
 ```python
 from paypal_client.api import PayPal
 
-APP_CLIENT_ID = (
-    "..FsDR4_spBk1yOzXQsVFOtTPHZOjo6Yd75h07SGnIu1ppx"..
-)
-APP_SECRET = (
-    "..J4IxLsVOmtmCKp6QxdN-6CpYCVuZ.."
-)
 paypal = PayPal(APP_CLIENT_ID, APP_SECRET)
-print(paypal.list_products())
-print(paypal.list_plans())
 
+#paypal.create_product(name="Video Streaming Service", description="Video Streaming Service basic plan", type="SERVICE")
+#paypal.create_plan(product_id="PROD-38B051282T0523342", name="Video Streaming Service Plan", description="Video Streaming Service basic plan", frequency="MONTH", price=10)
+#subscription = paypal.create_subscription(plan_id="P-9SD64338HJ091711ENBJQYDI")  # Replace with your actual plan ID
+print(paypal.show_subscription_details("I-FBNA66EU390B"))
+print(paypal.show_plan_details("P-9SD64338HJ091711ENBJQYDI"))
 ```
 

@@ -13,7 +13,7 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
 ]
-keywords = ["python", "paypal", "api", "rest api]
+keywords = ["python", "paypal", "api", "rest api"]
 requires-python = ">=3.9"
 
 [project.optional-dependencies]

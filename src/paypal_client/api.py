@@ -155,7 +155,9 @@ class PayPal:
             "taxes": {"percentage": "10", "inclusive": False},
         }
         response = self.api.post(url, json=json)
-        return self.handle_response(response)
+        print(response)
+        return False
+        #return self.handle_response(response)
 
     def create_product(self, name, type="DIGITAL", category="SOFTWARE", description=""):
         url = self.resources["products"]
