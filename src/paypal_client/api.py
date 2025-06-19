@@ -25,7 +25,7 @@ class PayPal:
             "products": self.url("/catalogs/products"),
             "subscriptions": self.url("/billing/subscriptions"),
             "plans": self.url("/billing/plans"),
-            "orders": self.url("/checkout/orders", 2),
+            "orders": self.url("/checkout/orders"),
         }
 
     def url(self, path, version=1):
@@ -128,6 +128,21 @@ class PayPal:
         response = self.api.post(url, json=json)
         return self.handle_response(response)
 
+    def show_order_details(self, order_id):
+        url = "{}/{}".format(self.resources["orders"], order_id)
+        response = self.api.get(url)
+        return self.handle_response(response)
+
+    def capture_order(self, order_id):
+        url = "{}/{}/capture".format(self.resources["orders"], order_id)
+        response = self.api.post(url, json={})
+        return self.handle_response(response)
+
+    def confirm_order(self, order_id):
+        url = "{}/{}/confirm-payment-source".format(self.resources["orders"], order_id)
+        response = self.api.post(url, json={})
+        return self.handle_response(response)
+
     def create_plan(self, product_id, name, description, frequency, price):
         url = self.resources["plans"]
         json = {
@@ -155,9 +170,7 @@ class PayPal:
             "taxes": {"percentage": "10", "inclusive": False},
         }
         response = self.api.post(url, json=json)
-        print(response)
-        return False
-        #return self.handle_response(response)
+        return self.handle_response(response)
 
     def create_product(self, name, type="DIGITAL", category="SOFTWARE", description=""):
         url = self.resources["products"]
