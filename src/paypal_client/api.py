@@ -63,7 +63,6 @@ class PayPal:
             if status_code == 400:
                 raise ValidationError(message, payload)
             raise FailedRequest(message, status_code, payload)
-        return data
 
     def list_products(self):
         url = self.resources["products"]
@@ -117,7 +116,6 @@ class PayPal:
             "intent": "CAPTURE",
             "purchase_units": [
                 {
-                    "reference_id": str(reference_id),
                     "amount": {"currency_code": "USD", "value": value},
                 }
             ],
