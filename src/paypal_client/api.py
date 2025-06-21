@@ -58,8 +58,8 @@ class PayPal:
                 message = data["error"]
                 payload = data["error_description"]
                 raise AuthorizationError(message, payload)
-            message = data["message"]
-            payload = data["details"]
+            message = data.get("message", "Unknown error")
+            payload = data.get("details", {})
             if status_code == 400:
                 raise ValidationError(message, payload)
             raise FailedRequest(message, status_code, payload)
@@ -103,11 +103,6 @@ class PayPal:
     def activate_subscription(self, id, reason):
         url = "{}/{}/activate".format(self.resources["subscriptions"], id)
         response = self.api.post(url, json={"reason": reason})
-        return self.handle_response(response)
-
-    def create_subscription(self, plan_id):
-        url = self.resources["subscriptions"]
-        response = self.api.post(url, json={"plan_id": plan_id})
         return self.handle_response(response)
 
     def create_order(self, reference_id, value):
