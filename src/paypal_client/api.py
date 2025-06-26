@@ -4,9 +4,7 @@ from .exceptions import ValidationError, AuthorizationError, FailedRequest
 
 
 class PayPal:
-    def __init__(
-        self, client_id, app_secret, sandbox=True, website="https://example.com"
-    ):
+    def __init__(self, client_id, app_secret, sandbox=True, website="https://example.com"):
         self.client_id = client_id
         self.secret = app_secret
 
@@ -25,7 +23,7 @@ class PayPal:
             "products": self.url("/catalogs/products"),
             "subscriptions": self.url("/billing/subscriptions"),
             "plans": self.url("/billing/plans"),
-            "orders": self.url("/checkout/orders"),
+            "orders": self.url("/checkout/orders", 2),
         }
 
     def url(self, path, version=1):
@@ -58,8 +56,8 @@ class PayPal:
                 message = data["error"]
                 payload = data["error_description"]
                 raise AuthorizationError(message, payload)
-            message = data.get("message", "Unknown error")
-            payload = data.get("details", {})
+            message = data["message"]
+            payload = data["details"]
             if status_code == 400:
                 raise ValidationError(message, payload)
             raise FailedRequest(message, status_code, payload)
@@ -67,8 +65,8 @@ class PayPal:
     def list_products(self):
         url = self.resources["products"]
         response = self.api.get(url)
-        data = response.json()
-        return self.handle_response(response)
+        response.raise_for_status()
+        return response.json()
 
     def list_plans(self):
         url = self.resources["plans"]
@@ -105,12 +103,18 @@ class PayPal:
         response = self.api.post(url, json={"reason": reason})
         return self.handle_response(response)
 
+    def create_subscription(self, plan_id):
+        url = self.resources["subscriptions"]
+        response = self.api.post(url, json={"plan_id": plan_id})
+        return self.handle_response(response)
+
     def create_order(self, reference_id, value):
         url = self.resources["orders"]
         json = {
             "intent": "CAPTURE",
             "purchase_units": [
                 {
+                    "reference_id": str(reference_id),
                     "amount": {"currency_code": "USD", "value": value},
                 }
             ],
@@ -119,21 +123,6 @@ class PayPal:
             "cancel_url": "https://example.com/cancelUrl",
         }
         response = self.api.post(url, json=json)
-        return self.handle_response(response)
-
-    def show_order_details(self, order_id):
-        url = "{}/{}".format(self.resources["orders"], order_id)
-        response = self.api.get(url)
-        return self.handle_response(response)
-
-    def capture_order(self, order_id):
-        url = "{}/{}/capture".format(self.resources["orders"], order_id)
-        response = self.api.post(url, json={})
-        return self.handle_response(response)
-
-    def confirm_order(self, order_id):
-        url = "{}/{}/confirm-payment-source".format(self.resources["orders"], order_id)
-        response = self.api.post(url, json={})
         return self.handle_response(response)
 
     def create_plan(self, product_id, name, description, frequency, price):
@@ -149,9 +138,7 @@ class PayPal:
                     "tenure_type": "REGULAR",
                     "sequence": 1,
                     "total_cycles": 12,
-                    "pricing_scheme": {
-                        "fixed_price": {"value": price, "currency_code": "USD"}
-                    },
+                    "pricing_scheme": {"fixed_price": {"value": price, "currency_code": "USD"}},
                 },
             ],
             "payment_preferences": {
