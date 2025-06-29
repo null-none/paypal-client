@@ -2,7 +2,7 @@
 
 
 ```bash
-pip install paypal-client
+pip install paypal-rest-api
 ```
 
 #### Example
